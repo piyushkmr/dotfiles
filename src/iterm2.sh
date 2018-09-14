@@ -1,0 +1,3 @@
+getCurrentSettings() {
+  echo "function"
+}

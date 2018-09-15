@@ -15,6 +15,7 @@
   "devDependencies": {
     "@types/download": "^6.2.2",
     "@types/fs-extra": "^5.0.4",
+    "@types/mocha": "^5.2.5",
     "@types/node": "^10.9.4",
     "extract-zip": "^1.6.7",
     "nodemon": "^1.18.4",

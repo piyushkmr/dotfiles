@@ -1,13 +1,16 @@
 import iterm from './iterm';
 import log from './utils/log';
 import * as path from 'path';
+import vscode from './vscode';
 
 function sync() {
-  iterm.syncSettings();
+  // iterm.syncSettings();
+  vscode.syncSettings();
 }
 
 function update() {
-  iterm.applySettings();
+  // iterm.applySettings();
+  vscode.applySettings();
 }
 
 function init() {

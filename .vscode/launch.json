@@ -10,7 +10,7 @@
       "name": "Launch Program",
       "program": "${workspaceFolder}/dist/index.js",
       "args": [
-        "update"
+        "sync"
       ],
       "outFiles": [
         "${workspaceFolder}/**/*.js"

@@ -1,9 +1,8 @@
 import SETTINGS from '../settings';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as https from 'https';
 import * as download from 'download';
-import * as extract from 'extract-zip';
+import * as ProgressBar from 'cli-progress';
 import log from '../utils/log';
 import move from '../utils/move';
 
@@ -14,6 +13,10 @@ function fileErrorHandler(err) {
 }
 
 export default {
+  createDirs: () => {
+    return fs.mkdirp(path.join(process.env.DOTFILES_BASE, SETTINGS.dir, SETTINGS.iterm.settingsDir));
+  },
+
   getJSONSettingsFromFile: () => {
     const src = path.join(SETTINGS.iterm.location, SETTINGS.iterm.file);
     const dest = path.join(process.env.DOTFILES_BASE, SETTINGS.dir, SETTINGS.iterm.settingsDir, SETTINGS.iterm.file);
@@ -27,19 +30,27 @@ export default {
       extract: true,
     };
     log.info('Downloading iterm...'); // Download file to system
-    download(SETTINGS.iterm.downloadLink, itermDownloadPath, downloadSettings).then(() => {
-      log.success('Downloaded iterm.');
-      const src = path.join(process.env.DOTFILES_BASE, 'assets', 'iTerm.app');
-      const dest = SETTINGS.iterm.installPath;
-      log.info('Unzipping iterm...'); // Unzip file
-      extract(itermDownloadPath, {dir: path.join(process.env.DOTFILES_BASE, 'assets')}, () => {
-        log.success('Unzipped.');
-        log.info('Copying to Applications Folder...');
+    const barOptions = {
+      format: '[{bar}] {percentage}% | ETA: {eta}s',
+    };
+    const vscodeBar = new ProgressBar.Bar(barOptions, ProgressBar.Presets.shades_classic);
+    vscodeBar.start(100, 0);
+    download(SETTINGS.iterm.downloadLink, itermDownloadPath, downloadSettings)
+      .on('response', (response) => {
+        vscodeBar.setTotal(response.headers['content-length']);
+      })
+      .on('downloadProgress', (progress) => {
+        vscodeBar.update(progress.transferred);
+      })
+      .then(() => {
+        vscodeBar.stop();
+        log.success('Downloaded iterm.');
+        const src = path.join(process.env.DOTFILES_BASE, 'assets', 'iTerm.app');
+        const dest = SETTINGS.iterm.installPath;
         move(src, dest, () => {
           log.success('Moved to Applications Folder.');
         });
       });
-    });
   },
 
   createJSONsymlink: () => {

@@ -1,7 +1,7 @@
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 
 export default (oldPath, newPath, callback?) => {
-  fs.rename(oldPath, newPath, (err) => {
+  return fs.rename(oldPath, newPath).then((err) => {
     if (err) {
       if (err.code === 'EXDEV') {
         copy();
@@ -24,6 +24,6 @@ export default (oldPath, newPath, callback?) => {
       fs.unlink(oldPath, callback);
     });
 
-    readStream.pipe(writeStream);
+    return readStream.pipe(writeStream);
   }
 };

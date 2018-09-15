@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "npm run build && node dist/index.js",
+    "sync": "npm run start --sync",
+    "apply": "npm run start --apply",
+    "build": "tsc",
     "build:w": "tsc -w"
   },
   "author": "",

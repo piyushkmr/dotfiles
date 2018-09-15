@@ -17,15 +17,15 @@ export default {
   syncSettingsFolder: () => {
     const src = path.join(SETTINGS.vscode.settingsDirLocation);
     const dest = path.join(process.env.DOTFILES_BASE, SETTINGS.dir, SETTINGS.vscode.settingsDir, 'userSettings');
-    fs.copy(src, dest, fileErrorHandler);
+    return fs.copy(src, dest);
   },
 
   syncExtensionsList: () => {
-    fs.readdir(SETTINGS.vscode.extensionsDir, (err, extensions: string[]) => {
+    return fs.readdir(SETTINGS.vscode.extensionsDir).then((extensions: string[]) => {
       const extns = extensions.map((extn) => {
         return extn.replace(/-\d+.\d+.*/g, '');
       }).join('\n');
-      fs.writeFile(SETTINGS.vscode.extensionsLocalDir, extns);
+      return fs.writeFile(SETTINGS.vscode.extensionsLocalDir, extns);
     });
   },
 };

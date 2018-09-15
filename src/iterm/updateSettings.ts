@@ -20,7 +20,7 @@ export default {
   getJSONSettingsFromFile: () => {
     const src = path.join(SETTINGS.iterm.location, SETTINGS.iterm.file);
     const dest = path.join(process.env.DOTFILES_BASE, SETTINGS.dir, SETTINGS.iterm.settingsDir, SETTINGS.iterm.file);
-    fs.copyFile(src, dest, fileErrorHandler);
+    return fs.copyFile(src, dest, fileErrorHandler);
   },
 
   downloadAndInstallIterm2: () => {
@@ -35,7 +35,7 @@ export default {
     };
     const vscodeBar = new ProgressBar.Bar(barOptions, ProgressBar.Presets.shades_classic);
     vscodeBar.start(100, 0);
-    download(SETTINGS.iterm.downloadLink, itermDownloadPath, downloadSettings)
+    return download(SETTINGS.iterm.downloadLink, itermDownloadPath, downloadSettings)
       .on('response', (response) => {
         vscodeBar.setTotal(response.headers['content-length']);
       })
@@ -47,7 +47,7 @@ export default {
         log.success('Downloaded iterm.');
         const src = path.join(process.env.DOTFILES_BASE, 'assets', 'iTerm.app');
         const dest = SETTINGS.iterm.installPath;
-        move(src, dest, () => {
+        return move(src, dest, () => {
           log.success('Moved to Applications Folder.');
         });
       });
@@ -56,11 +56,11 @@ export default {
   createJSONsymlink: () => {
     const dest = path.join(SETTINGS.iterm.location, SETTINGS.iterm.file);
     const src = path.join(process.env.DOTFILES_BASE, SETTINGS.dir, SETTINGS.iterm.settingsDir, SETTINGS.iterm.file);
-    fs.stat(dest, (err, stats) => {
+    return fs.stat(dest).then((err) => {
       if (!err) {// File exists and delete it
-        fs.unlink(dest, () => fs.copyFile(src, dest, fileErrorHandler));
+        return fs.unlink(dest).then(() => fs.copyFile(src, dest, fileErrorHandler));
       } else {
-        fs.copyFile(src, dest, fileErrorHandler);
+        return fs.copyFile(src, dest, fileErrorHandler);
       }
     });
   },

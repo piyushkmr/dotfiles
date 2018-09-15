@@ -3,9 +3,11 @@ import apply from './applySettings';
 
 export default {
   syncSettings: () => {
-    sync.createDirs().then(() => {
-      sync.syncSettingsFolder();
-      sync.syncExtensionsList();
+    return sync.createDirs().then(() => {
+      return Promise.all([
+        sync.syncSettingsFolder(),
+        sync.syncExtensionsList(),
+      ]);
     });
   },
 

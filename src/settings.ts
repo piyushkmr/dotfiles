@@ -22,4 +22,15 @@ export default {
     aliasName: 'vscode', // Alias to use for launching VSCode from terminal
   },
   bashrcLocation: path.join(os.homedir(), '.bashrc'),
+  miscFilesToSync: [ // Miscellaneous files that you need to sync e.g. bashrc, bash_profile, custom settings etc
+    // These need to be absolute paths
+    // You can use os.homedir() to refer to user directory ~
+    path.join(os.homedir(), '.bashrc'), // .bashrc
+    path.join(os.homedir(), '.bash_profile'), // .bash_profile
+    path.join(os.homedir(), '.vimrc'), // .vimrc
+  ],
+  installHomeBrew: true, // Whether to install homebrew on new machine
+  installBrewPackages: [ // Works only if installHomeBrew is true
+    'jq',
+  ],
 };

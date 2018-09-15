@@ -2,8 +2,8 @@ import iterm from './updateSettings';
 
 export default {
   syncSettings: () => {
-    iterm.createDirs().then(() => {
-      iterm.getJSONSettingsFromFile();
+    return iterm.createDirs().then(() => {
+      return iterm.getJSONSettingsFromFile();
     });
   },
 

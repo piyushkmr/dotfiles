@@ -1,7 +1,9 @@
 import * as fs from 'fs-extra';
 
 export default (oldPath, newPath, callback?) => {
-  return fs.rename(oldPath, newPath).then((err) => {
+  return fs.rename(oldPath, newPath).then(() => {
+    callback();
+  }).catch((err) => {
     if (err) {
       if (err.code === 'EXDEV') {
         copy();
@@ -10,7 +12,6 @@ export default (oldPath, newPath, callback?) => {
       }
       return;
     }
-    callback();
   });
 
   function copy() {
